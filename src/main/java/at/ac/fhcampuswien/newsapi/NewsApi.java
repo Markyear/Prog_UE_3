@@ -114,15 +114,14 @@ public class NewsApi {
         this.endpoint = endpoint;
     }
 
-    protected String requestData() {
+    protected String requestData() throws NewsApiException {
         String url = buildURL();
         System.out.println("URL: " + url);
         URL obj = null;
         try {
             obj = new URL(url);
         } catch (MalformedURLException e) {
-            // TODO improve ErrorHandling
-            e.printStackTrace();
+            throw new NewsApiException("Invalid URL");
         }
         HttpURLConnection con;
         StringBuilder response = new StringBuilder();
@@ -135,14 +134,26 @@ public class NewsApi {
             }
             in.close();
         } catch (IOException e) {
-            // TODO improve ErrorHandling
-            System.out.println("Error "+e.getMessage());
+            e.printStackTrace();
+            throw new NewsApiException("Something went wrong???");
+
         }
         return response.toString();
     }
 
-    protected String buildURL() {
-        // TODO ErrorHandling
+    protected String buildURL() throws NewsApiException {
+        if(getEndpoint() == null){
+            throw new NewsApiException("Endpoint must not be NULL!!!");
+        }
+
+        if(getQ() == null){
+            throw new NewsApiException("Q must not be NULL!!!");
+        }
+
+        if(getApiKey() == null){
+            throw new NewsApiException("ApiKey must not be NULL!!!");
+        }
+
         String urlbase = String.format(NEWS_API_URL,getEndpoint().getValue(),getQ(),getApiKey());
         StringBuilder sb = new StringBuilder(urlbase);
 
@@ -184,7 +195,7 @@ public class NewsApi {
         return sb.toString();
     }
 
-    public NewsResponse getNews() {
+    public NewsResponse getNews() throws NewsApiException {
         NewsResponse newsReponse = null;
         String jsonResponse = requestData();
         if(jsonResponse != null && !jsonResponse.isEmpty()){
@@ -196,10 +207,9 @@ public class NewsApi {
                     System.out.println("Error: "+newsReponse.getStatus());
                 }
             } catch (JsonProcessingException e) {
-                System.out.println("Error: "+e.getMessage());
+                throw new NewsApiException("JSON related issue");
             }
         }
-        //TODO improve Errorhandling
         return newsReponse;
     }
 }

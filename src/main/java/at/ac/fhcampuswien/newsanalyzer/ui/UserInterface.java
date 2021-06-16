@@ -2,10 +2,16 @@ package at.ac.fhcampuswien.newsanalyzer.ui;
 
 
 import at.ac.fhcampuswien.newsanalyzer.ctrl.Controller;
+import at.ac.fhcampuswien.newsapi.NewsApi;
+import at.ac.fhcampuswien.newsapi.NewsApiBuilder;
+import at.ac.fhcampuswien.newsapi.enums.Category;
+import at.ac.fhcampuswien.newsapi.enums.Country;
+import at.ac.fhcampuswien.newsapi.enums.Endpoint;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class UserInterface 
 {
@@ -14,19 +20,63 @@ public class UserInterface
 	public void getDataFromCtrl1(){
 		System.out.println("ABC");
 
-		ctrl.process();
+		NewsApi newsApi = new NewsApiBuilder()
+				.setApiKey(Controller.APIKEY)
+				.setQ("Corona")
+				.setEndPoint(Endpoint.TOP_HEADLINES)
+				.setSourceCountry(Country.at)
+				.setSourceCategory(Category.health)
+				.createNewsApi();
+
+		ctrl.process(newsApi);
 	}
 
 	public void getDataFromCtrl2(){
-		// TODO implement me
+		System.out.println("DEF");
+
+		NewsApi newsApi = new NewsApiBuilder()
+				.setApiKey(Controller.APIKEY)
+				.setQ("Corona")
+				.setEndPoint(Endpoint.TOP_HEADLINES)
+				.setSourceCountry(Country.at)
+				.setSourceCategory(Category.health)
+				.createNewsApi();
+
+		ctrl.process(newsApi);
 	}
 
 	public void getDataFromCtrl3(){
-		// TODO implement me
+		System.out.println("DEF");
+
+		NewsApi newsApi = new NewsApiBuilder()
+				.setApiKey(Controller.APIKEY)
+				.setQ("PC")
+				.setEndPoint(Endpoint.TOP_HEADLINES)
+				.setSourceCountry(Country.at)
+				.setSourceCategory(Category.science)
+				.createNewsApi();
+
+		ctrl.process(newsApi);
 	}
 	
 	public void getDataForCustomInput() {
-		// TODO implement me
+
+		String userInput = "";
+		System.out.println("Enter your Topic: ");
+		Scanner scanner = new Scanner(System.in);
+		userInput = scanner.next();
+
+		System.out.println("You chose: " + userInput);
+		System.out.println();
+
+		NewsApi newsApi = new NewsApiBuilder()
+				.setApiKey(Controller.APIKEY)
+				.setQ(userInput)
+				.setEndPoint(Endpoint.EVERYTHING)
+				.createNewsApi();
+
+
+		ctrl.process(newsApi);
 	}
 
 
